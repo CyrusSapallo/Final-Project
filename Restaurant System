@@ -1,0 +1,160 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <vector>
+using namespace std;
+
+struct MenuItem {
+    string name;
+    float price;
+};
+
+// Function to display the menu
+void displayMenu(const vector<MenuItem>& menu) {
+    cout << "------ Menu ------" << endl;
+    for (size_t i = 0; i < menu.size(); ++i) {
+        cout << i + 1 << ". " << setw(50) << left << menu[i].name << "$" << menu[i].price << endl;
+    }
+    cout << "------------------" << endl;
+}
+
+int main() {
+    cout << "Welcome to SAPALLO RESTAURANT!" << endl;
+
+    string name;
+    cout << "Step 1: Enter your name: ";
+    getline(cin, name);
+
+    int numPeople;
+    do {
+        cout << "Step 2: Number of people in your group: ";
+        cin >> numPeople;
+        cin.ignore(); // Consume the newline character left in the buffer
+    } while (numPeople <= 0);
+
+    vector<MenuItem> menu = {
+        {"Lumpiang Shanghai (Filipino Spring Rolls)", 7.99},
+        {"Tokwa't Baboy (Tofu and Pork in Soy-Vinegar Sauce)", 6.99},
+        {"Fish Balls with Spicy Vinegar Dip", 5.99},
+        {"Chicharon (Crispy Pork Rinds)", 4.99},
+        {"Adobo (Chicken or Pork in Soy-Vinegar Sauce)", 11.99},
+        {"Sinigang (Tamarind Soup with Pork or Shrimp)", 12.99},
+        {"Kare-Kare (Oxtail Stew in Peanut Sauce)", 14.99},
+        {"Lechon Kawali (Crispy Fried Pork Belly)", 13.99},
+        {"Pancit Bihon (Stir-Fried Rice Noodles with Meat and Vegetables)", 10.99},
+        {"Buko Juice (Fresh Coconut Juice)", 3.99},
+        {"Sago't Gulaman (Tapioca and Gelatin Drink)", 2.99},
+        {"Mango Shake", 4.99},
+        {"Barako Coffee", 3.99}
+    }; // Menu items and prices
+
+    cout << "Step 3: Menu Options" << endl;
+    displayMenu(menu);
+
+    vector<string> orderedItems;
+    float totalPrice = 0;
+    int choice;
+
+    do {
+        cout << "1. Add to Order" << endl;
+        cout << "2. Remove from Order" << endl;
+        cout << "3. Confirm Order" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore(); // Consume the newline character left in the buffer
+
+        switch (choice) {
+        case 1:
+            int itemNumber;
+            displayMenu(menu);
+            cout << "Enter item number to add to order: ";
+            cin >> itemNumber;
+            cin.ignore(); // Consume the newline character left in the buffer
+            if (itemNumber > 0 && itemNumber <= menu.size()) {
+                orderedItems.push_back(menu[itemNumber - 1].name);
+                totalPrice += menu[itemNumber - 1].price;
+                cout << menu[itemNumber - 1].name << " added to your order." << endl;
+                cout << "Current Order:" << endl;
+                cout << "------ Order ------" << endl;
+                for (const string& item : orderedItems) {
+                    cout << "- " << item << endl;
+                }
+                cout << "-------------------" << endl;
+                cout << "Total Price: $" << totalPrice << endl;
+            }
+            else {
+                cout << "Invalid item number. Please choose a valid item." << endl;
+            }
+            break;
+        case 2:
+            if (!orderedItems.empty()) {
+                cout << "Enter item number to remove from order: ";
+                cin >> itemNumber;
+                cin.ignore(); // Consume the newline character left in the buffer
+                if (itemNumber > 0 && itemNumber <= orderedItems.size()) {
+                    totalPrice -= menu[itemNumber - 1].price;
+                    cout << orderedItems[itemNumber - 1] << " removed from your order." << endl;
+                    orderedItems.erase(orderedItems.begin() + itemNumber - 1);
+                    cout << "Current Order:" << endl;
+                    cout << "------ Order ------" << endl;
+                    for (const string& item : orderedItems) {
+                        cout << "- " << item << endl;
+                    }
+                    cout << "-------------------" << endl;
+                    cout << "Total Price: $" << totalPrice << endl;
+                }
+                else {
+                    cout << "Invalid item number. Please choose a valid item." << endl;
+                }
+            }
+            else {
+                cout << "Your order is empty." << endl;
+            }
+            break;
+        case 3:
+            cout << "Step 4: Menu Confirmation" << endl;
+            cout << "Your confirmed order:" << endl;
+            cout << "------ Order ------" << endl;
+            for (const string& item : orderedItems) {
+                cout << "- " << item << endl;
+            }
+            cout << "-------------------" << endl;
+            cout << "Total Price: $" << totalPrice << endl;
+            break;
+        default:
+            cout << "Invalid choice. Please enter a valid option." << endl;
+        }
+    } while (choice != 3);
+
+    string paymentMethod;
+    cout << "Step 5: Choose your payment method (1. Cash / 2. Online / 3. Card): ";
+    cin >> paymentMethod;
+    cin.ignore(); // Consume the newline character left in the buffer
+
+    cout << "Step 6: Receipt" << endl;
+    cout << "Restaurant Name: SAPALLO RESTAURANT" << endl;
+    cout << "Customer Name: " << name << endl;
+    cout << "Number of People: " << numPeople << endl;
+    cout << "Items Ordered: ";
+    for (const string& item : orderedItems) {
+        cout << item << ", ";
+    }
+    cout << endl;
+    cout << "Total Price: $" << totalPrice << endl;
+    cout << "Payment Method: ";
+    if (paymentMethod == "1") {
+        cout << "Cash" << endl;
+    }
+    else if (paymentMethod == "2") {
+        cout << "Online" << endl;
+    }
+    else if (paymentMethod == "3") {
+        cout << "Card" << endl;
+    }
+    else {
+        cout << "Unknown" << endl;
+    }
+    cout << "---------------------" << endl;
+
+    return 0;
+}
